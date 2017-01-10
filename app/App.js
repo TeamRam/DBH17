@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
+import { StyleRoot } from 'radium';
 
 import config from './config';
 
@@ -18,7 +19,9 @@ class App extends Component {
             { name: 'viewport', content: 'width=device-width, initial-scale=1' }
           ]}
         />
-        {this.props.children}
+        <StyleRoot>
+          {this.props.children}
+        </StyleRoot>
       </div>
     );
   }

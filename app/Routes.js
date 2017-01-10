@@ -14,7 +14,7 @@ const loadLandingPage = (location, cb) => {
   });
 };
 
-export const getRoutes = (store) => {
+const getRoutes = () => {
   return (
     <Route component={App}>
       <Route path="/" getComponent={loadLandingPage} />

@@ -6,5 +6,6 @@
   "search.exclude": {
     ".vscode": true,
     "dist": true
-  }
+  },
+  "eslint.enable": true
 }

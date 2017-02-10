@@ -1,0 +1,11 @@
+{
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,  
+  "javascript.validate.enable": false,
+  "search.exclude": {
+    ".vscode": true,
+    "dist": true
+  },
+  "eslint.enable": true
+}

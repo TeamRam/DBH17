@@ -5,3 +5,7 @@ dist/*
 npm-debug.log
 .env
 /target/
+.cache-main
+.classpath
+.project
+

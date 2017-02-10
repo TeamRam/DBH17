@@ -1,12 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import RaisedButton from 'material-ui/RaisedButton';
+
 
 import { responsive, color } from '../../theme';
 
 import { changeName } from '../../actions/landingPage';
 import radium from '../../utility/Radium';
 import MediaQuery from '../../utility/MediaQuery';
+
 
 class LandingPage extends React.Component {
   render() {
@@ -15,13 +16,6 @@ class LandingPage extends React.Component {
         <MediaQuery query={responsive.q.sm}>
           <p>This only appears on big screens!</p>
         </MediaQuery>
-        <RaisedButton
-          label={'Hello mom'}
-          primary
-        />
-        <div style={styles.hello}>Hello</div>
-        <div style={styles.world}>{this.props.name}</div>
-        <button onClick={() => { this.props.changeName(); }}>Click</button>
       </div>
     );
   }

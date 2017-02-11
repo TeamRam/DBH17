@@ -34,48 +34,6 @@ public class FundContractTest extends AbstractEthereumJTest {
 	}
 
 	/**
-	 * Test getTotalVoteCount when all participants vote on the same risk.
-	 */
-	@Test
-	public void testgetTotalVoteCountAllOnSameVote() {
-		// vote account0
-		SolidityCallResult callFunctionResult = contract.callFunction(1, "invest", Risk.Low.ordinal());
-		Assert.assertTrue(callFunctionResult.isSuccessful());
-		Object[] constFunctionResult = contract.callConstFunction("getTotalVoteCount");
-		Assert.assertEquals(BigInteger.ONE, constFunctionResult[0]);
-		// vote account1
-		blockChain.setSender(account1.getEcKey());
-		callFunctionResult = contract.callFunction(1, "invest", Risk.Low.ordinal());
-		Assert.assertTrue(callFunctionResult.isSuccessful());
-		constFunctionResult = contract.callConstFunction("getTotalVoteCount");
-		Assert.assertEquals(BigInteger.valueOf(2L), constFunctionResult[0]);
-	}
-
-	/**
-	 * Test getTotalVoteCount when all participants vote on the different risk.
-	 */
-	@Test
-	public void testgetTotalVoteCountOnDifferentVote() {
-		// vote account0
-		SolidityCallResult callFunctionResult = contract.callFunction(1, "invest", Risk.Low.ordinal());
-		Assert.assertTrue(callFunctionResult.isSuccessful());
-		Object[] constFunctionResult = contract.callConstFunction("getTotalVoteCount");
-		Assert.assertEquals(BigInteger.ONE, constFunctionResult[0]);
-		// vote account1
-		blockChain.setSender(account1.getEcKey());
-		callFunctionResult = contract.callFunction(1, "invest", Risk.Medium.ordinal());
-		Assert.assertTrue(callFunctionResult.isSuccessful());
-		constFunctionResult = contract.callConstFunction("getTotalVoteCount");
-		Assert.assertEquals(BigInteger.valueOf(2L), constFunctionResult[0]);
-		// vote account2
-		blockChain.setSender(account2.getEcKey());
-		callFunctionResult = contract.callFunction(1, "invest", Risk.High.ordinal());
-		Assert.assertTrue(callFunctionResult.isSuccessful());
-		constFunctionResult = contract.callConstFunction("getTotalVoteCount");
-		Assert.assertEquals(BigInteger.valueOf(3L), constFunctionResult[0]);
-	}
-
-	/**
 	 * Test GetParticipantVote when voted.
 	 */
 	@Test

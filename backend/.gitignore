@@ -9,3 +9,4 @@ overlays/
 database/
 logs/
 .vscode/
+/Persons.obj

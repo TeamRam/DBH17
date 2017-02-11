@@ -1,0 +1,10 @@
+exclude:
+- /webpack.production.config.js
+- /webpack.lambda.config.js
+- /webpack.config.js
+- /server.js
+component_depth: 1
+languages:
+- java
+- javascript
+- solidity

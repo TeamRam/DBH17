@@ -14,15 +14,17 @@ contract FundContract {
         uint balance;
     }
 
+    struct RiskBalances {
+        uint lowRiskBalance;
+        uint mediumRiskBalance;
+        uint highRiskBalance;
+    }
+
     mapping(address => Participant) public participants;
 
     // Invariant: the sum of the balances per risk must be equal to the balance of this contract
 
-    uint lowRiskBalance;
-    uint mediumRiskBalance;
-    uint highRiskBalance;
-
-    // TODO Use events
+    RiskBalances riskBalances;
 
     function invest(Risk votedRisk) payable {
         Participant oldParticipant = participants[msg.sender];
@@ -49,11 +51,11 @@ contract FundContract {
 
     function getInvestment(Risk risk) constant returns (uint) {
         if (risk == Risk.Low) {
-            return lowRiskBalance;
+            return riskBalances.lowRiskBalance;
         } else if (risk == Risk.Medium) {
-            return mediumRiskBalance;
+            return riskBalances.mediumRiskBalance;
         } else {
-            return highRiskBalance;
+            return riskBalances.highRiskBalance;
         }
     }
 
@@ -68,22 +70,30 @@ contract FundContract {
     /// Returns the combined balance of the 3 risks.
     /// It must be equal to the balance of the contract.
     function getCombinedBalance() constant returns (uint) {
-        return lowRiskBalance + mediumRiskBalance + highRiskBalance;
+        return riskBalances.lowRiskBalance + riskBalances.mediumRiskBalance + riskBalances.highRiskBalance;
     }
 
-    function updateBalances(Risk vote, uint amountToAdd) {
-        // The weights are computed on the basis of the old values. This must probably be
-        // changed to take the added amount into account.
+    function getInvestmentWeights() constant returns (uint, uint, uint) {
+        uint totalBalance = getCombinedBalance();
+
+        return
+            (riskBalances.lowRiskBalance / totalBalance,
+            riskBalances.mediumRiskBalance / totalBalance,
+            riskBalances.highRiskBalance / totalBalance);
+    }
+
+    function updateBalances(Risk vote, uint amountToAdd) internal {
+        // Note that the weights are computed on the basis of the old values.
 
         uint newLowRiskBalance =
-            lowRiskBalance + ((lowRiskBalance * amountToAdd) / getCombinedBalance());
+            riskBalances.lowRiskBalance + ((riskBalances.lowRiskBalance * amountToAdd) / getCombinedBalance());
         uint newMediumRiskBalance =
-            mediumRiskBalance + ((mediumRiskBalance * amountToAdd) / getCombinedBalance());
+            riskBalances.mediumRiskBalance + ((riskBalances.mediumRiskBalance * amountToAdd) / getCombinedBalance());
         uint newHighRiskBalance =
             (getCombinedBalance() + amountToAdd) - (newLowRiskBalance + newMediumRiskBalance);
 
-        lowRiskBalance = newLowRiskBalance;
-        mediumRiskBalance = newMediumRiskBalance;
-        highRiskBalance = newHighRiskBalance;
+        riskBalances.lowRiskBalance = newLowRiskBalance;
+        riskBalances.mediumRiskBalance = newMediumRiskBalance;
+        riskBalances.highRiskBalance = newHighRiskBalance;
     }
 }

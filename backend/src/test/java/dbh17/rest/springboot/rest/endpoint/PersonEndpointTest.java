@@ -57,11 +57,13 @@ public class PersonEndpointTest extends BaseEndpointTest {
 		Person person = new Person();
 		person.setBlockchainAddress("0x9876");
 		person.setCredential("fb9876");
+		person.setPassword("myunsecuresecret");
 		String content = json(person);
 
 		mockMvc.perform(put("/v1/person").accept(JSON_MEDIA_TYPE).content(content).contentType(JSON_MEDIA_TYPE))
 				.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
 				.andExpect(jsonPath("$.credential", is(person.getCredential())))
+				.andExpect(jsonPath("$.password", is(person.getPassword())))
 				.andExpect(jsonPath("$.blockchainAddress", is(person.getBlockchainAddress()))).andReturn();
 	}
 

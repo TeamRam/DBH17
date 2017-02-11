@@ -17,6 +17,7 @@ public class PersonValidator implements Validator {
 	public void validate(Object target, Errors errors) {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "credential", "validation.message.field.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "blockchainAddress", "validation.message.field.required");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "validation.message.field.required");
 	}
 
 }

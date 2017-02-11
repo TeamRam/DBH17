@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,16 +19,16 @@ import dbh17.rest.springboot.rest.service.Web3Jservice.Account;
 @Service
 public class PersonService {
 
-	private static Map<String, Person> personData = new HashMap<>();
+	private Map<String, Person> personData = null;
 
 	@Autowired
 	private Web3Jservice web3Jservice;
-	static {
-		Person a = new Person();
-		a.setCredential("fb1234");
-		a.setBlockchainAddress("0x1234");
-		a.setPassword("somesecret");
-		personData.put("fb1234", a);
+	@Autowired
+	private PersonStorage personStorage;
+
+	@PostConstruct
+	public void init() {
+		personData = personStorage.restore();
 	}
 
 	public Person findOne(String credential) {
@@ -41,6 +42,7 @@ public class PersonService {
 			p.setPassword(account.getPassword());
 			p.setCredential(credential);
 			personData.put(credential, p);
+			personStorage.store(personData);
 			return p;
 		} catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException | NoSuchProviderException | InterruptedException | ExecutionException
 				| CipherException | IOException e) {

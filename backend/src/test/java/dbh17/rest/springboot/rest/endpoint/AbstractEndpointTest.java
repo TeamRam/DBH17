@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * AbstractEndpointTest with common test methods.
  */
-public abstract class BaseEndpointTest {
+public abstract class AbstractEndpointTest {
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 	protected static final MediaType JSON_MEDIA_TYPE = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("UTF-8"));

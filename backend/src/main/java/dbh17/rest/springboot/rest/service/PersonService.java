@@ -10,24 +10,24 @@ import dbh17.rest.domain.Person;
 @Service
 public class PersonService {
 
-	private static Map<String, String> personData = new HashMap<>();
+	private static Map<String, Person> personData = new HashMap<>();
 	static {
-		personData.put("fb1234", "0x1234");
+		Person a = new Person();
+		a.setCredential("fb1234");
+		a.setBlockchainAddress("0x1234");
+		a.setPassword("somesecret");
+		personData.put("fb1234", a);
 	}
 
 	public Person findOne(String credential) {
 		if (personData.containsKey(credential)) {
-			String address = personData.get(credential);
-			Person p = new Person();
-			p.setBlockchainAddress(address);
-			p.setCredential(credential);
-			return p;
+			return personData.get(credential);
 		}
 		return null;
 	}
 
 	public Person save(Person person) {
-		personData.put(person.getCredential(), person.getBlockchainAddress());
+		personData.put(person.getCredential(), person);
 		return person;
 	}
 }

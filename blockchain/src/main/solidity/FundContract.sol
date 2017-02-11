@@ -35,7 +35,7 @@ contract FundContract {
         // Who can be a participant and invest money?
         // How often can the same participant invest money?
         // When can the participant invest?
-        
+
         // Is it really a good idea to use personal accounts?
 
         uint oldBalance = participants[msg.sender].balance;
@@ -78,12 +78,17 @@ contract FundContract {
     }
 
     function updateBalances(Risk vote, uint amountToAdd) internal {
-        // Note that the weights are computed on the basis of the old values.
+        uint rawNewLowRiskBalance = (vote == Risk.Low) ? (riskBalances.lowRiskBalance + amountToAdd) : riskBalances.lowRiskBalance;
+        uint rawNewMediumRiskBalance = (vote == Risk.Medium) ? (riskBalances.mediumRiskBalance + amountToAdd) : riskBalances.mediumRiskBalance;
+        uint rawNewHighRiskBalance = (vote == Risk.High) ? (riskBalances.highRiskBalance + amountToAdd) : riskBalances.highRiskBalance;
 
+        uint rawNewTotalBalance = rawNewLowRiskBalance + rawNewMediumRiskBalance + rawNewHighRiskBalance;
+ 
         uint newLowRiskBalance =
-            riskBalances.lowRiskBalance + ((riskBalances.lowRiskBalance * amountToAdd) / getCombinedBalance());
+            riskBalances.lowRiskBalance + ((riskBalances.lowRiskBalance * rawNewLowRiskBalance) / rawNewTotalBalance);
         uint newMediumRiskBalance =
-            riskBalances.mediumRiskBalance + ((riskBalances.mediumRiskBalance * amountToAdd) / getCombinedBalance());
+            riskBalances.mediumRiskBalance + ((riskBalances.mediumRiskBalance * rawNewMediumRiskBalance) / rawNewTotalBalance);
+        // Make sure that the balance of the contract equals the sum of all paid amounts
         uint newHighRiskBalance =
             (getCombinedBalance() + amountToAdd) - (newLowRiskBalance + newMediumRiskBalance);
 

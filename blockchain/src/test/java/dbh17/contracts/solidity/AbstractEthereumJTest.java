@@ -72,11 +72,9 @@ public abstract class AbstractEthereumJTest {
 	/**
 	 * Creates a contract from file.
 	 *
-	 * @param solidifyFileName
-	 *            solidifyFileName
-	 * @return de SolidityContract
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
+	 * @param solidifyFileName solidifyFileName
+	 * @return the SolidityContract
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected SolidityContract createContractFromFile(String solidifyFileName) throws IOException {
 		// URL url = Resources.getResource(solidifyFileName);

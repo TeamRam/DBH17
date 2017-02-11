@@ -2,9 +2,7 @@ pragma solidity ^0.4.0;
 
 /// Fund contract.
 /// The collective investment is influenced by each vote for one of the risks.
-/// The formulas for the investment are as follows:
-/// The high risk investment is: (NumberOfHighRiskVotes / TotalNumberOfVotes) * TotalBalance
-/// Medium risk and low risk investments are computed analogously.
+/// The formulas for the investment use weighted voting.
 contract FundContract {
     
     enum Risk { Low, Medium, High }
@@ -18,17 +16,13 @@ contract FundContract {
 
     mapping(address => Participant) public participants;
 
-    uint lowRiskVoteCount;
-    uint mediumRiskVoteCount;
-    uint highRiskVoteCount;
+    // Invariant: the sum of the balances per risk must be equal to the balance of this contract
+
+    uint lowRiskBalance;
+    uint mediumRiskBalance;
+    uint highRiskBalance;
 
     // TODO Use events
-
-    // Invariant: the total vote counts per risk must be equal to the number of participants
-    // who have voted for that risk.
-    // Invariant: per risk, total balance of this contract for that risk must equal sum of balances
-    // of participants who voted for that risk.
-    // This must be checked by test code (in the contract we cannot loop over the mapping)
 
     function invest(Risk votedRisk) payable {
         Participant oldParticipant = participants[msg.sender];
@@ -44,7 +38,7 @@ contract FundContract {
 
         uint oldBalance = participants[msg.sender].balance;
 
-        addOneVote(votedRisk);
+        updateBalances(votedRisk, msg.value);
 
         participants[msg.sender] = Participant({
             participantAddress: msg.sender,
@@ -53,19 +47,13 @@ contract FundContract {
         });
     }
 
-    function getTotalVoteCount() constant returns (uint) {
-        return lowRiskVoteCount + mediumRiskVoteCount + highRiskVoteCount;
-    }
-
     function getInvestment(Risk risk) constant returns (uint) {
-        uint totalVoteCount = getTotalVoteCount();
-
         if (risk == Risk.Low) {
-            return (this.balance * lowRiskVoteCount) / totalVoteCount;
+            return lowRiskBalance;
         } else if (risk == Risk.Medium) {
-            return (this.balance * mediumRiskVoteCount) / totalVoteCount;
+            return mediumRiskBalance;
         } else {
-            return (this.balance * highRiskVoteCount) / totalVoteCount;
+            return highRiskBalance;
         }
     }
 
@@ -77,13 +65,25 @@ contract FundContract {
         return participants[participant].balance;
     }
 
-    function addOneVote(Risk vote) {
-        if (vote == Risk.Low) {
-            lowRiskVoteCount += 1;
-        } else if (vote == Risk.Medium) {
-            mediumRiskVoteCount += 1;
-        } else {
-            highRiskVoteCount += 1;
-        }
+    /// Returns the combined balance of the 3 risks.
+    /// It must be equal to the balance of the contract.
+    function getCombinedBalance() constant returns (uint) {
+        return lowRiskBalance + mediumRiskBalance + highRiskBalance;
+    }
+
+    function updateBalances(Risk vote, uint amountToAdd) {
+        // The weights are computed on the basis of the old values. This must probably be
+        // changed to take the added amount into account.
+
+        uint newLowRiskBalance =
+            lowRiskBalance + ((lowRiskBalance * amountToAdd) / getCombinedBalance());
+        uint newMediumRiskBalance =
+            mediumRiskBalance + ((mediumRiskBalance * amountToAdd) / getCombinedBalance());
+        uint newHighRiskBalance =
+            (getCombinedBalance() + amountToAdd) - (newLowRiskBalance + newMediumRiskBalance);
+
+        lowRiskBalance = newLowRiskBalance;
+        mediumRiskBalance = newMediumRiskBalance;
+        highRiskBalance = newHighRiskBalance;
     }
 }

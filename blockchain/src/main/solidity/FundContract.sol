@@ -26,6 +26,8 @@ contract FundContract {
 
     RiskBalances riskBalances;
 
+    event Invested(address participant, Risk vote, uint amount);
+
     function invest(Risk votedRisk) payable {
         Participant oldParticipant = participants[msg.sender];
 
@@ -47,6 +49,8 @@ contract FundContract {
             vote: votedRisk,
             balance: oldBalance + msg.value
         });
+
+        Invested(msg.sender, votedRisk, msg.value);
     }
 
     function getInvestment(Risk risk) constant returns (uint) {

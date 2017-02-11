@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import org.ethereum.config.SystemProperties;
 import org.ethereum.config.blockchain.HomesteadConfig;
 import org.ethereum.core.Account;
+import org.ethereum.crypto.ECKey;
 import org.ethereum.util.blockchain.SolidityContract;
 import org.ethereum.util.blockchain.StandaloneBlockchain;
 import org.junit.Assert;
@@ -14,6 +15,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spongycastle.util.encoders.Hex;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.BaseEncoding;
@@ -34,6 +36,8 @@ public abstract class AbstractEthereumJTest {
 	protected static StandaloneBlockchain blockChain;
 	protected SolidityContract contract;
 	protected static Account account0;
+	protected static Account account1;
+	protected static Account account2;
 
 	/**
 	 * Initalize the Standalone blockchain
@@ -59,7 +63,19 @@ public abstract class AbstractEthereumJTest {
 		// the initial miner dataset is generated
 		blockChain.createBlock();
 
-		// account0.setAddress("5db10750e8caff27f906b41c71b3471057dd2004");
+		account0 = new Account();
+		account0.init(blockChain.getSender());
+
+		account1 = new Account();
+		ECKey k = ECKey.fromPrivate(Hex.decode("6ef8da380c27cea8fdf7448340ea99e8e2268fc2950d79ed47cbf6f85dc977ec"));
+		account1.init(k);
+		byte[] address1 = account1.getAddress();
+		Assert.assertArrayEquals(Hex.decode("31e2e1ed11951c7091dfba62cd4b7145e947219c"), address1);
+		account2 = new Account();
+		k = ECKey.fromPrivate(Hex.decode("fee3b6045d75237490f1ba055bf6d034b2a83c71c78fb526b3183b5c68944f1d"));
+		account2.init(k);
+		byte[] address2 = account2.getAddress();
+		Assert.assertArrayEquals(Hex.decode("ee0250c19ad59305b2bdb61f34b45b72fe37154f"), address2);
 	}
 
 	@Before
@@ -67,6 +83,8 @@ public abstract class AbstractEthereumJTest {
 		// create the contract to be tested.
 		String solidifyFileName = getSolidifyFileName();
 		contract = createContractFromFile(solidifyFileName);
+		// reset the sender to the default
+		blockChain.setSender(account0.getEcKey());
 	}
 
 	/**

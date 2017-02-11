@@ -12,9 +12,11 @@ contract FundContract {
     // Invariant: total balance of this contract must equal sum of balances of participants
     
     function deposit(address participant) payable {
+        uint oldBalance = participant.balance;
+
         participants[msg.sender] = Participant({
             participantAddress: msg.sender,
-            balance: msg.value
+            balance: oldBalance + msg.value
         });
     }
 }

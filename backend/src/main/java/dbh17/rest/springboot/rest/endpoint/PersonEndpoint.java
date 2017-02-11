@@ -1,12 +1,9 @@
 package dbh17.rest.springboot.rest.endpoint;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,11 +28,7 @@ public class PersonEndpoint extends BaseEndpoint {
 	public ResponseEntity<Person> get(@PathVariable("credential") String credential) {
 
 		Person person = personService.findOne(credential);
-		return (person == null ? ResponseEntity.status(HttpStatus.NOT_FOUND) : ResponseEntity.ok()).body(person);
+		return ResponseEntity.ok().body(person);
 	}
 
-	@InitBinder("person")
-	protected void initBinder(WebDataBinder binder) {
-		binder.addValidators(new PersonValidator());
-	}
 }

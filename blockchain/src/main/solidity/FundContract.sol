@@ -1,10 +1,10 @@
-pragma solidity ^0.4.9;
+pragma solidity ^0.4.0;
 
 /// Fund contract.
 /// The collective investment is influenced by each vote for one of the risks.
 /// The formulas for the investment use weighted voting.
 contract FundContract {
-    
+
     enum Risk { Low, Medium, High }
 
     struct Participant {
@@ -73,13 +73,10 @@ contract FundContract {
         return riskBalances.lowRiskBalance + riskBalances.mediumRiskBalance + riskBalances.highRiskBalance;
     }
 
-    function getInvestmentWeights() constant returns (ufixed, ufixed, ufixed) {
+    function getInvestmentsPerRisk() constant returns (uint, uint, uint) {
         uint totalBalance = getCombinedBalance();
 
-        return
-            (ufixed(riskBalances.lowRiskBalance / totalBalance),
-            ufixed(riskBalances.mediumRiskBalance / totalBalance),
-            ufixed(riskBalances.highRiskBalance / totalBalance));
+        return (riskBalances.lowRiskBalance, riskBalances.mediumRiskBalance, riskBalances.highRiskBalance);
     }
 
     function updateBalances(Risk vote, uint amountToAdd) internal {

@@ -2,11 +2,11 @@ package dbh17.rest.springboot.rest.endpoint;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,33 +38,22 @@ public class PersonEndpointTest extends AbstractEndpointTest {
 		MvcResult result = mockMvc.perform(get("/v1/person/{credential}", credential)).andExpect(status().isOk())
 				.andExpect(content().contentType(JSON_MEDIA_TYPE)).andDo(MockMvcResultHandlers.print())
 				.andExpect(jsonPath("$.credential", is(credential)))
-				.andExpect(jsonPath("$.blockchainAddress", is(address))).andReturn();
-
-		logger.debug("content=" + result.getResponse().getContentAsString());
-	}
-
-	@Test
-	public void getPersonByCredentialNotFound() throws Exception {
-		MvcResult result = mockMvc.perform(get("/v1/person/{credential}", "none")).andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.blockchainAddress", is(address)))
+				.andExpect(jsonPath("$.password", is(testPerson.getPassword())))
 				.andReturn();
 
 		logger.debug("content=" + result.getResponse().getContentAsString());
 	}
 
 	@Test
-	public void savePerson() throws Exception {
+	public void getPersonByCredentialNotFound() throws Exception {
+		MvcResult result = mockMvc.perform(get("/v1/person/{credential}", "none")).andExpect(status().isOk())
+				.andExpect(jsonPath("$.credential", is("none")))
+				.andExpect(jsonPath("$.blockchainAddress", IsNull.notNullValue()))
+				.andExpect(jsonPath("$.password", IsNull.notNullValue()))
+				.andReturn();
 
-		Person person = new Person();
-		person.setBlockchainAddress("0x9876");
-		person.setCredential("fb9876");
-		person.setPassword("myunsecuresecret");
-		String content = json(person);
-
-		mockMvc.perform(put("/v1/person").accept(JSON_MEDIA_TYPE).content(content).contentType(JSON_MEDIA_TYPE))
-				.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
-				.andExpect(jsonPath("$.credential", is(person.getCredential())))
-				.andExpect(jsonPath("$.password", is(person.getPassword())))
-				.andExpect(jsonPath("$.blockchainAddress", is(person.getBlockchainAddress()))).andReturn();
+		logger.debug("content=" + result.getResponse().getContentAsString());
 	}
 
 	private Person createPerson() {
@@ -73,6 +62,7 @@ public class PersonEndpointTest extends AbstractEndpointTest {
 		Person person = new Person();
 		person.setBlockchainAddress("0x1234");
 		person.setCredential("fb1234");
+		person.setPassword("somesecret");
 		return person;
 	}
 

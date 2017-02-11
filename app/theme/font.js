@@ -9,7 +9,7 @@ export default {
   subtitle: {
     fontFamily: 'Alwyn OT, sans-serif',
     fontSize: 23,
-    fontWeight: 300
+    fontWeight: 500
   },
   body: {
     fontFamily: 'Roboto, sans-serif',

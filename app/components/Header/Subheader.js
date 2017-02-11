@@ -1,13 +1,14 @@
 import React from 'react';
-import theme, { font, color, alignment } from '../../theme';
-import config from '../../config';
 
-class Header extends React.Component {
+import theme, { font, color, alignment } from '../../theme';
+
+class Subheader extends React.Component {
   constructor(props, context) {
     super(props, context);
 
     this.styles = {
       container: {
+        borderRadius: theme.boxBorderRadius,
         width: '100%',
         height: this.props.height || 44,
         backgroundColor: color.secondary,
@@ -15,8 +16,7 @@ class Header extends React.Component {
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingLeft: alignment.smallSidePadding,
-        paddingRight: alignment.smallSidePadding,
-        borderRadius: theme.boxBorderRadius,
+        paddingRight: alignment.smallSidePadding
       }
     };
   }
@@ -24,11 +24,10 @@ class Header extends React.Component {
   render() {
     return (
       <div style={{ ...this.styles.container, ...this.props.style }}>
-        <img style={{ height: '130%' }} src={config.asset('images/logo2.png')} />
         {this.props.children}
       </div>
     );
   }
 }
 
-export default Header;
+export default Subheader;

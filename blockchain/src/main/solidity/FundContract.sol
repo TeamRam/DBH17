@@ -53,11 +53,11 @@ contract FundContract {
         });
     }
 
-    function getTotalVoteCount() returns (uint) {
+    function getTotalVoteCount() constant returns (uint) {
         return lowRiskVoteCount + mediumRiskVoteCount + highRiskVoteCount;
     }
 
-    function getInvestment(Risk risk) returns (uint) {
+    function getInvestment(Risk risk) constant returns (uint) {
         uint totalVoteCount = getTotalVoteCount();
 
         if (risk == Risk.Low) {
@@ -69,11 +69,11 @@ contract FundContract {
         }
     }
 
-    function getParticipantVote(address participant) returns (Risk) {
+    function getParticipantVote(address participant) constant returns (Risk) {
         return participants[participant].vote;
     }
 
-    function getParticipantBalance(address participant) returns (uint) {
+    function getParticipantBalance(address participant) constant returns (uint) {
         return participants[participant].balance;
     }
 

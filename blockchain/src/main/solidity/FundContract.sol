@@ -24,6 +24,8 @@ contract FundContract {
 
     // TODO Use events
 
+    // Invariant: the total vote counts per risk must be equal to the number of participants
+    // who have voted for that risk.
     // Invariant: per risk, total balance of this contract for that risk must equal sum of balances
     // of participants who voted for that risk.
     // This must be checked by test code (in the contract we cannot loop over the mapping)
@@ -41,6 +43,8 @@ contract FundContract {
         // Is it really a good idea to use personal accounts?
 
         uint oldBalance = participants[msg.sender].balance;
+
+        addOneVote(votedRisk);
 
         participants[msg.sender] = Participant({
             participantAddress: msg.sender,
@@ -71,5 +75,15 @@ contract FundContract {
 
     function getParticipantBalance(address participant) returns (uint) {
         return participants[participant].balance;
+    }
+
+    function addOneVote(Risk vote) {
+        if (vote == Risk.Low) {
+            lowRiskVoteCount += 1;
+        } else if (vote == Risk.Medium) {
+            mediumRiskVoteCount += 1;
+        } else {
+            highRiskVoteCount += 1;
+        }
     }
 }

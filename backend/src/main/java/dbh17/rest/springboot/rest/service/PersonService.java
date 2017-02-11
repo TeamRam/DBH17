@@ -41,7 +41,6 @@ public class PersonService {
 			return p;
 		} catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException | NoSuchProviderException | InterruptedException | ExecutionException
 				| CipherException | IOException e) {
-			// TODO Auto-generated catch block
 			throw new RuntimeException(e);
 		}
 	}

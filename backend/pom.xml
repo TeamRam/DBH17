@@ -2,10 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.droidablebee</groupId>
-	<artifactId>spring-boot-rest-example</artifactId>
+	<groupId>dbh17.teamram.backend</groupId>
+	<artifactId>restinterface</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>Spring boot example with REST and spring data JPA</name>
+	<name>Spring boot backend with REST</name>
 
 	<packaging>jar</packaging>
 
@@ -72,19 +72,6 @@
 					<source>${java.version}</source>
 					<target>${java.version}</target>
 				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${boot.version}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>build-info</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

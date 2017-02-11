@@ -1,8 +1,12 @@
 import { combineReducers } from 'redux';
 import window from './window';
-import landingPage from './landingPage';
+import user from './user';
+import rest from './rest';
+import eth from './eth';
 
 export default combineReducers({
   window,
-  landingPage
+  user,
+  rest,
+  eth
 });

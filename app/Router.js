@@ -13,7 +13,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import customMuiTheme from './customMuiTheme';
 import MediaQuery from './utility/MediaQuery';
-import Radium, { StyleRoot } from './utility/Radium';
+import Radium from './utility/Radium';
 import configureStore from './configureStore';
 import config from './config';
 
@@ -26,6 +26,7 @@ if (isClient) {
   const onRouteUpdate = () => {
     scrollToTop();
   };
+
 
   const scrollToTop = () => {
     window.scrollTo(0, 0);
@@ -45,6 +46,8 @@ if (isClient) {
     // ]
   };
 
+  const Auth0 = require('./auth').default;
+
   persistStore(store, persistConfig, () => {
     match({
       routes,
@@ -53,9 +56,9 @@ if (isClient) {
       ReactDOM.render(
         <Provider store={store}>
           <MuiThemeProvider muiTheme={muiTheme}>
-            <StyleRoot>
+            <Auth0>
               <Router {...routeProps} onUpdate={onRouteUpdate} />
-            </StyleRoot>
+            </Auth0>
           </MuiThemeProvider>
         </Provider>,
         document.getElementById('root')
@@ -152,9 +155,7 @@ function renderComponentWithRoot(Component, componentProps, store) {
   const componentHtml = renderToStaticMarkup(
     <Provider store={store}>
       <MuiThemeProvider muiTheme={muiTheme}>
-        <StyleRoot>
-          <Component {...componentProps} />
-        </StyleRoot>
+        <Component {...componentProps} />
       </MuiThemeProvider>
     </Provider>
   );

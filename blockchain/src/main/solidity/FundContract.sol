@@ -28,6 +28,12 @@ contract FundContract {
 
     event Invested(address participant, Risk vote, uint amount);
 
+    function FundContract() {
+        riskBalances.lowRiskBalance = 1;
+        riskBalances.mediumRiskBalance = 1;
+        riskBalances.highRiskBalance = 1;
+    }
+
     function invest(Risk votedRisk) payable {
         Participant oldParticipant = participants[msg.sender];
 

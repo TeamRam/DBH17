@@ -19,14 +19,19 @@ import dbh17.rest.domain.Person;
 @Service
 public class PersonStorage {
 	public Map<String, Person> restore() {
-		File f = new File("Persons.obj");
+		String pathname = "Persons.obj";
+		return restore(pathname);
+	}
+
+	public Map<String, Person> restore(String pathname) {
+		File f = new File(pathname);
 		if (!f.exists()) {
 			return new HashMap<String, Person>();
 		}
 		HashMap<String, Person> map = new HashMap<String, Person>();
 		ObjectInputStream ois = null;
 		try {
-			FileInputStream fis = new FileInputStream("Persons.obj");
+			FileInputStream fis = new FileInputStream(pathname);
 			ois = new ObjectInputStream(fis);
 			while (true) {
 				Person person = (Person) ois.readObject();

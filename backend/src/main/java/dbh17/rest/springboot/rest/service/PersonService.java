@@ -9,6 +9,8 @@ import java.util.concurrent.ExecutionException;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.web3j.crypto.CipherException;
@@ -18,6 +20,8 @@ import dbh17.rest.springboot.rest.service.Web3Jservice.Account;
 
 @Service
 public class PersonService {
+
+	private static final Logger LOG = LoggerFactory.getLogger(PersonService.class);
 
 	private Map<String, Person> personData = null;
 
@@ -32,6 +36,7 @@ public class PersonService {
 	}
 
 	public Person findOne(String credential) {
+		LOG.info("Getting details for {}", credential);
 		if (personData.containsKey(credential)) {
 			return personData.get(credential);
 		}
@@ -43,6 +48,7 @@ public class PersonService {
 			p.setCredential(credential);
 			personData.put(credential, p);
 			personStorage.store(personData);
+			LOG.info("found address {}", p.getBlockchainAddress());
 			return p;
 		} catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException | NoSuchProviderException | InterruptedException | ExecutionException
 				| CipherException | IOException e) {

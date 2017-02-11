@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.web3j.crypto.CipherException;
 
@@ -18,7 +19,9 @@ import dbh17.rest.springboot.rest.service.Web3Jservice.Account;
 public class PersonService {
 
 	private static Map<String, Person> personData = new HashMap<>();
-	private Web3Jservice web3Jservice = new Web3Jservice();
+
+	@Autowired
+	private Web3Jservice web3Jservice;
 	static {
 		Person a = new Person();
 		a.setCredential("fb1234");

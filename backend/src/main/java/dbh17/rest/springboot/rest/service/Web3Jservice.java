@@ -9,12 +9,14 @@ import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.util.concurrent.ExecutionException;
 
+import org.springframework.stereotype.Service;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 
+@Service
 public class Web3Jservice {
 	private static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
 	private SecureRandom random = new SecureRandom();

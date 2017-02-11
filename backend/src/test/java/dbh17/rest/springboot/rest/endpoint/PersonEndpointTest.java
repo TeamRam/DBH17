@@ -19,7 +19,7 @@ import dbh17.rest.domain.Person;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-public class PersonEndpointTest extends BaseEndpointTest {
+public class PersonEndpointTest extends AbstractEndpointTest {
 
 	private Person testPerson;
 

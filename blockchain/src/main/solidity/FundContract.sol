@@ -73,9 +73,7 @@ contract FundContract {
         return riskBalances.lowRiskBalance + riskBalances.mediumRiskBalance + riskBalances.highRiskBalance;
     }
 
-    function getInvestmentsPerRisk() constant returns (uint, uint, uint) {
-        uint totalBalance = getCombinedBalance();
-
+    function getBalancesPerRisk() constant returns (uint, uint, uint) {
         return (riskBalances.lowRiskBalance, riskBalances.mediumRiskBalance, riskBalances.highRiskBalance);
     }
 

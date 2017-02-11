@@ -10,9 +10,16 @@ contract FundContract {
     mapping(address => Participant) public participants;
     
     // Invariant: total balance of this contract must equal sum of balances of participants
-    
-    function deposit(address participant) payable {
-        uint oldBalance = participant.balance;
+    // This must be checked by test code (in the contract we cannot loop over the mapping)
+
+    function deposit() payable {
+        // Who can be a participant and deposit money?
+        // How often can the same participant deposit money?
+        // When can the participant deposit?
+        
+        // Is it really a good idea to use personal accounts?
+
+        uint oldBalance = participants[msg.sender].balance;
 
         participants[msg.sender] = Participant({
             participantAddress: msg.sender,

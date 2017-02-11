@@ -78,19 +78,9 @@ contract FundContract {
     }
 
     function updateBalances(Risk vote, uint amountToAdd) internal {
-        uint rawNewLowRiskBalance = (vote == Risk.Low) ? (riskBalances.lowRiskBalance + amountToAdd) : riskBalances.lowRiskBalance;
-        uint rawNewMediumRiskBalance = (vote == Risk.Medium) ? (riskBalances.mediumRiskBalance + amountToAdd) : riskBalances.mediumRiskBalance;
-        uint rawNewHighRiskBalance = (vote == Risk.High) ? (riskBalances.highRiskBalance + amountToAdd) : riskBalances.highRiskBalance;
-
-        uint rawNewTotalBalance = rawNewLowRiskBalance + rawNewMediumRiskBalance + rawNewHighRiskBalance;
- 
-        uint newLowRiskBalance =
-            riskBalances.lowRiskBalance + ((amountToAdd * rawNewLowRiskBalance) / rawNewTotalBalance);
-        uint newMediumRiskBalance =
-            riskBalances.mediumRiskBalance + ((amountToAdd * rawNewMediumRiskBalance) / rawNewTotalBalance);
-        // Make sure that the balance of the contract equals the sum of all paid amounts
-        uint newHighRiskBalance =
-            (getCombinedBalance() + amountToAdd) - (newLowRiskBalance + newMediumRiskBalance);
+        uint newLowRiskBalance = (vote == Risk.Low) ? (riskBalances.lowRiskBalance + amountToAdd) : riskBalances.lowRiskBalance;
+        uint newMediumRiskBalance = (vote == Risk.Medium) ? (riskBalances.mediumRiskBalance + amountToAdd) : riskBalances.mediumRiskBalance;
+        uint newHighRiskBalance = (vote == Risk.High) ? (riskBalances.highRiskBalance + amountToAdd) : riskBalances.highRiskBalance;
 
         riskBalances.lowRiskBalance = newLowRiskBalance;
         riskBalances.mediumRiskBalance = newMediumRiskBalance;

@@ -85,9 +85,9 @@ contract FundContract {
         uint rawNewTotalBalance = rawNewLowRiskBalance + rawNewMediumRiskBalance + rawNewHighRiskBalance;
  
         uint newLowRiskBalance =
-            riskBalances.lowRiskBalance + ((riskBalances.lowRiskBalance * rawNewLowRiskBalance) / rawNewTotalBalance);
+            riskBalances.lowRiskBalance + ((amountToAdd * rawNewLowRiskBalance) / rawNewTotalBalance);
         uint newMediumRiskBalance =
-            riskBalances.mediumRiskBalance + ((riskBalances.mediumRiskBalance * rawNewMediumRiskBalance) / rawNewTotalBalance);
+            riskBalances.mediumRiskBalance + ((amountToAdd * rawNewMediumRiskBalance) / rawNewTotalBalance);
         // Make sure that the balance of the contract equals the sum of all paid amounts
         uint newHighRiskBalance =
             (getCombinedBalance() + amountToAdd) - (newLowRiskBalance + newMediumRiskBalance);

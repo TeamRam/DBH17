@@ -14,7 +14,7 @@ public class FundContractTest extends AbstractEthereumJTest {
 	}
 
 	enum ParticipantStructFields {
-		PARTICIPANTADDRESS,
+		PARTICIPANT_ADDRESS,
 		VOTE,
 		BALANCE
 	}
@@ -31,7 +31,6 @@ public class FundContractTest extends AbstractEthereumJTest {
 		Assert.assertEquals(BigInteger.ONE, constFunctionResult[ParticipantStructFields.BALANCE.ordinal()]);
 		// contract should have a balance = 1
 		Assert.assertEquals(BigInteger.ONE, blockChain.getBlockchain().getRepository().getBalance(contract.getAddress()));
-
 	}
 
 	/**
@@ -94,8 +93,7 @@ public class FundContractTest extends AbstractEthereumJTest {
 	@Test
 	public void testGetParticipantVoteWhenNotYetVoted() {
 		Object[] constFunctionResult = contract.callConstFunction("getParticipantVote", account0.getAddress());
-		// what should happen?
-		// Assert.assertEquals(0, constFunctionResult.length);
+		Assert.assertEquals(BigInteger.valueOf(0), constFunctionResult[0]);
 	}
 
 	@Test
@@ -108,8 +106,7 @@ public class FundContractTest extends AbstractEthereumJTest {
 	@Test
 	public void testGetParticipantBalanceWhenNotYetVoted() {
 		Object[] constFunctionResult = contract.callConstFunction("getParticipantBalance", account0.getAddress());
-		// what should happen?
-		// Assert.assertEquals(0, constFunctionResult.length);
+		Assert.assertEquals(BigInteger.valueOf(0), constFunctionResult[0]);
 	}
 
 	/**

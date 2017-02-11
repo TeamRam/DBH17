@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.8;
 
 /// Fund contract.
 /// The collective investment is influenced by each vote for one of the risks.

@@ -1,12 +1,9 @@
 package dbh17.rest.domain;
 
-import java.time.LocalDate;
-
 public class Person {
 
 	private String blockchainAddress;
-	private String name;
-	private LocalDate dateOfBirth;
+	private String credential;
 
 	public String getBlockchainAddress() {
 		return blockchainAddress;
@@ -16,20 +13,12 @@ public class Person {
 		this.blockchainAddress = address;
 	}
 
-	public String getName() {
-		return name;
+	public String getCredential() {
+		return credential;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public LocalDate getDateOfBirth() {
-		return dateOfBirth;
-	}
-
-	public void setDateOfBirth(LocalDate dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
+	public void setCredential(String credential) {
+		this.credential = credential;
 	}
 
 }

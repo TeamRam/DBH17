@@ -3,6 +3,7 @@ pragma solidity ^0.4.0;
 contract FundContract {
     
     struct Participant {
+        // Duplicating the address, which is the same as the mapping key
         address participantAddress;
         uint balance;
     }

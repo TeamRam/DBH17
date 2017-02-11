@@ -73,13 +73,13 @@ contract FundContract {
         return riskBalances.lowRiskBalance + riskBalances.mediumRiskBalance + riskBalances.highRiskBalance;
     }
 
-    function getInvestmentWeights() constant returns (uint, uint, uint) {
+    function getInvestmentWeights() constant returns (ufixed, ufixed, ufixed) {
         uint totalBalance = getCombinedBalance();
 
         return
-            (riskBalances.lowRiskBalance / totalBalance,
-            riskBalances.mediumRiskBalance / totalBalance,
-            riskBalances.highRiskBalance / totalBalance);
+            (ufixed(riskBalances.lowRiskBalance / totalBalance),
+            ufixed(riskBalances.mediumRiskBalance / totalBalance),
+            ufixed(riskBalances.highRiskBalance / totalBalance));
     }
 
     function updateBalances(Risk vote, uint amountToAdd) internal {

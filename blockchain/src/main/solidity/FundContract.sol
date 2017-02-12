@@ -1,8 +1,9 @@
 pragma solidity ^0.4.8;
 
 /// Fund contract.
-/// The collective investment is influenced by each vote for one of the risks.
-/// The formulas for the investment use weighted voting.
+/// Each investment includes a vote for a risk, and adds to the balance for that
+/// specific risk.
+/// The solution can easily be generalized to other choices than risk levels.
 contract FundContract {
 
     enum Risk { Low, Medium, High }
@@ -23,12 +24,14 @@ contract FundContract {
     mapping(address => Participant) public participants;
 
     // Invariant: the sum of the balances per risk must be equal to the balance of this contract
+    // Invariant: the sum of the balances per participant must be equal to the balance of this contract
 
     RiskBalances riskBalances;
 
     event Invested(address participant, Risk vote, uint amount);
 
     function FundContract() {
+        // This assignments happened to be necessary due to some technical challenges.
         riskBalances.lowRiskBalance = 1;
         riskBalances.mediumRiskBalance = 1;
         riskBalances.highRiskBalance = 1;
@@ -37,14 +40,8 @@ contract FundContract {
     function invest(Risk votedRisk) payable {
         Participant oldParticipant = participants[msg.sender];
 
-        // Each participant can only vote for one risk.
+        // Each participant can only vote for one risk, even if he/she invests more than once.
         if (oldParticipant.vote != votedRisk && oldParticipant.balance != 0) throw;
-
-        // Who can be a participant and invest money?
-        // How often can the same participant invest money?
-        // When can the participant invest?
-
-        // Is it really a good idea to use personal accounts?
 
         uint oldBalance = participants[msg.sender].balance;
 

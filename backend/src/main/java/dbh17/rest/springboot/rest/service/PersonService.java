@@ -42,6 +42,10 @@ public class PersonService {
 		if (personData.containsKey(credential)) {
 			return personData.get(credential);
 		}
+		return createAndStoreNewPerson(credential);
+	}
+
+	private Person createAndStoreNewPerson(String credential) {
 		try {
 			Person p = createNewPerson(credential);
 			personData.put(credential, p);

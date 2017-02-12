@@ -38,13 +38,14 @@ class LandingPage extends React.Component {
   
     const renderBalances = () => {
       const balances = this.props.balances;
+      if (!balances || !balances.length) { return null; }
       const balancesTotal = balances.reduce((prev, tot) => {
         return tot + prev;
       });
       const balancesPercentage = balances.map((val) => {
         return val / balancesTotal;
       });
-
+      console.log(balancesTotal);
       console.log(balancesPercentage);
       return null;
     };

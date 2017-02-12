@@ -43,19 +43,26 @@ public class PersonService {
 			return personData.get(credential);
 		}
 		try {
-			Account account = web3Jservice.createAccount();
-			Person p = new Person();
-			p.setBlockchainAddress(account.getAddress());
-			p.setPassword(account.getPassword());
-			p.setCredential(credential);
+			Person p = createNewPerson(credential);
 			personData.put(credential, p);
 			personStorage.store(personData);
-			LOG.info("found address {}", p.getBlockchainAddress());
+			LOG.info("created address {}", p.getBlockchainAddress());
 			return p;
 		} catch (InvalidAlgorithmParameterException | NoSuchAlgorithmException | NoSuchProviderException | InterruptedException | ExecutionException
 				| CipherException | IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private Person createNewPerson(String credential)
+			throws InterruptedException, ExecutionException, InvalidAlgorithmParameterException, NoSuchAlgorithmException,
+			NoSuchProviderException, CipherException, IOException {
+		Account account = web3Jservice.createAccount();
+		Person p = new Person();
+		p.setBlockchainAddress(account.getAddress());
+		p.setPassword(account.getPassword());
+		p.setCredential(credential);
+		return p;
 	}
 
 	public List<Person> findAll() {

@@ -41,15 +41,17 @@ public class PersonStorage {
 		} catch (IOException | ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
+		close(ois);
+		return map;
+	}
+
+	private void close(ObjectInputStream ois) {
 		if (ois != null) {
 			try {
 				ois.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
-		return map;
 	}
 
 	public void store(Map<String, Person> pmap) throws IOException {

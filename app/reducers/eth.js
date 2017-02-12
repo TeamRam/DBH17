@@ -6,6 +6,8 @@ export default function eth(state = initialState, action) {
   let resource;
 
   switch (action.type) {
+    case 'USER_LOGOUT':
+      return initialState;
     case 'ETH_BALANCE_LOADING':
       address = action.address;
       resource = {
@@ -16,7 +18,7 @@ export default function eth(state = initialState, action) {
 
       return { ...state, [address]: resource };
     case 'ETH_BALANCE_ERROR':
-      address = action.resource;
+      address = action.address;
       resource = {
         ...state[address],
         loading: false,
@@ -25,7 +27,7 @@ export default function eth(state = initialState, action) {
 
       return { ...state, [address]: resource };
     case 'ETH_BALANCE_SUCCESS':
-      address = action.resource;
+      address = action.address;
       resource = {
         ...state[address],
         loading: false,
@@ -34,6 +36,8 @@ export default function eth(state = initialState, action) {
       };
 
       return { ...state, [address]: resource };
+    case 'ETH_BALANCES':
+      return { ...state, balances: action.balances };
     default:
       return state;
   }

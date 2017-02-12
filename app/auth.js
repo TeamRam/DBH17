@@ -43,7 +43,7 @@ class Auth0 extends React.Component {
         return;
       }
       this.props.saveProfile(profile);
-      this.props.getEthAddress(profile.clientID);
+      this.props.getEthAddress(profile.user_id);
     });
   }
 
@@ -59,7 +59,7 @@ Auth0.childContextTypes = {
 const mapDispatchToProps = (dispatch) => {
   return {
     saveProfile: (profile) => { dispatch(saveProfile(profile)); },
-    getEthAddress: (clientId) => { dispatch(restGet('ethAddress', `/v1/person/${clientId}`)); }
+    getEthAddress: (userId) => { dispatch(restGet('ethAddress', `/v1/person/${userId}`)); }
   };
 };
 

@@ -1,3 +1,4 @@
+import { getBalance } from './eth';
 
 const restDomain = 'http://10.20.100.97:8080';
 
@@ -18,6 +19,7 @@ export const restGet = (resource, endpoint) => {
               error: body.error
             });
           } else {
+            dispatch(getBalance(body.blockchainAddress));
             dispatch({
               type: 'REST_GET_SUCCESS',
               resource,

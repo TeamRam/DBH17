@@ -36,7 +36,7 @@ if (isClient) {
 
   const store = configureStore(window.__INITIAL_STATE__);
   const persistConfig = {
-    // blacklist: ['match', 'chat', 'appbar'],
+    blacklist: ['eth'],
     // transforms: [
     //   // only store a subset of the profile reducers state
     //   createFilter(

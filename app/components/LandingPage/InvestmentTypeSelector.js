@@ -1,16 +1,12 @@
 import React from 'react';
-
+import { connect } from 'react-redux';
 import theme, { color, alignment, font } from '../../theme';
 import radium from '../../utility/Radium';
+import { selectType } from '../../actions/investment';
 
 class InvestmentTypeSelector extends React.Component {
   constructor(props, context) {
     super(props, context);
-
-    this.state = {
-      selected: 1
-    };
-
     this.options = [
       {
         title: 'Low risk'
@@ -28,8 +24,8 @@ class InvestmentTypeSelector extends React.Component {
     return (
       <div style={{ ...styles.container, ...this.props.style }}>
         {this.options.map((optionInfo, index) => {
-          const itemStyle = this.state.selected === index ? { ...styles.option, ...styles.selectedOption } : styles.option;
-          return (<div onClick={() => { this.setState({ selected: index }); }} style={itemStyle}>
+          const itemStyle = this.props.selectedType === index ? { ...styles.option, ...styles.selectedOption } : styles.option;
+          return (<div key={index} onClick={() => { this.props.selectType(index); }} style={itemStyle}>
             {optionInfo.title}
           </div>);
         })}
@@ -64,4 +60,16 @@ const styles = {
   }
 };
 
-export default radium(InvestmentTypeSelector);
+const mapStateToProps = ({ investment }) => {
+  return {
+    selectedType: investment.selectedType
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    selectType: (index) => { dispatch(selectType(index)); }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(radium(InvestmentTypeSelector));

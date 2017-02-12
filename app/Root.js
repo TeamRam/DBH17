@@ -36,7 +36,8 @@ class Root extends Component {
 const styles = {
   body: {
     margin: 0,
-    fontFamily: 'Roboto'
+    fontFamily: 'Roboto',
+    backgroundColor: '#E2E2E2'
   }
 };
 

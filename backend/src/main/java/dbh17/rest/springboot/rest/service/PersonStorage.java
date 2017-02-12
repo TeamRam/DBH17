@@ -27,6 +27,10 @@ public class PersonStorage {
 		if (!f.exists()) {
 			return new HashMap<String, Person>();
 		}
+		return load(pathname);
+	}
+
+	private HashMap<String, Person> load(String pathname) {
 		HashMap<String, Person> map = new HashMap<String, Person>();
 		ObjectInputStream ois = null;
 		try {

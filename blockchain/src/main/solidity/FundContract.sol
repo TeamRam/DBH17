@@ -1,8 +1,9 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.8;
 
 /// Fund contract.
-/// The collective investment is influenced by each vote for one of the risks.
-/// The formulas for the investment use weighted voting.
+/// Each investment includes a vote for a risk, and adds to the balance for that
+/// specific risk.
+/// The solution can easily be generalized to other choices than risk levels.
 contract FundContract {
 
     enum Risk { Low, Medium, High }
@@ -23,20 +24,24 @@ contract FundContract {
     mapping(address => Participant) public participants;
 
     // Invariant: the sum of the balances per risk must be equal to the balance of this contract
+    // Invariant: the sum of the balances per participant must be equal to the balance of this contract
 
     RiskBalances riskBalances;
+
+    event Invested(address participant, Risk vote, uint amount);
+
+    function FundContract() {
+        // This assignments happened to be necessary due to some technical challenges.
+        riskBalances.lowRiskBalance = 1;
+        riskBalances.mediumRiskBalance = 1;
+        riskBalances.highRiskBalance = 1;
+    }
 
     function invest(Risk votedRisk) payable {
         Participant oldParticipant = participants[msg.sender];
 
-        // Each participant can only vote for one risk.
+        // Each participant can only vote for one risk, even if he/she invests more than once.
         if (oldParticipant.vote != votedRisk && oldParticipant.balance != 0) throw;
-
-        // Who can be a participant and invest money?
-        // How often can the same participant invest money?
-        // When can the participant invest?
-        
-        // Is it really a good idea to use personal accounts?
 
         uint oldBalance = participants[msg.sender].balance;
 
@@ -47,6 +52,8 @@ contract FundContract {
             vote: votedRisk,
             balance: oldBalance + msg.value
         });
+
+        Invested(msg.sender, votedRisk, msg.value);
     }
 
     function getInvestment(Risk risk) constant returns (uint) {
@@ -78,14 +85,9 @@ contract FundContract {
     }
 
     function updateBalances(Risk vote, uint amountToAdd) internal {
-        // Note that the weights are computed on the basis of the old values.
-
-        uint newLowRiskBalance =
-            riskBalances.lowRiskBalance + ((riskBalances.lowRiskBalance * amountToAdd) / getCombinedBalance());
-        uint newMediumRiskBalance =
-            riskBalances.mediumRiskBalance + ((riskBalances.mediumRiskBalance * amountToAdd) / getCombinedBalance());
-        uint newHighRiskBalance =
-            (getCombinedBalance() + amountToAdd) - (newLowRiskBalance + newMediumRiskBalance);
+        uint newLowRiskBalance = (vote == Risk.Low) ? (riskBalances.lowRiskBalance + amountToAdd) : riskBalances.lowRiskBalance;
+        uint newMediumRiskBalance = (vote == Risk.Medium) ? (riskBalances.mediumRiskBalance + amountToAdd) : riskBalances.mediumRiskBalance;
+        uint newHighRiskBalance = (vote == Risk.High) ? (riskBalances.highRiskBalance + amountToAdd) : riskBalances.highRiskBalance;
 
         riskBalances.lowRiskBalance = newLowRiskBalance;
         riskBalances.mediumRiskBalance = newMediumRiskBalance;

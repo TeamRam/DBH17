@@ -23,7 +23,7 @@ public class FundContractTest extends AbstractEthereumJTest {
 	 * test depositing a value on a new account
 	 */
 	@Test
-	public void testDeposit() {
+	public void testInvest() {
 		SolidityCallResult callFunctionResult = contract.callFunction(1, "invest", Risk.Low.ordinal());
 		Assert.assertTrue(callFunctionResult.isSuccessful());
 		// participant should have a balance = 1
@@ -31,48 +31,15 @@ public class FundContractTest extends AbstractEthereumJTest {
 		Assert.assertEquals(BigInteger.ONE, constFunctionResult[ParticipantStructFields.BALANCE.ordinal()]);
 		// contract should have a balance = 1
 		Assert.assertEquals(BigInteger.ONE, blockChain.getBlockchain().getRepository().getBalance(contract.getAddress()));
-	}
 
-	/**
-	 * Test getTotalVoteCount when all participants vote on the same risk.
-	 */
-	@Test
-	public void testgetTotalVoteCountAllOnSameVote() {
-		// vote account0
-		SolidityCallResult callFunctionResult = contract.callFunction(1, "invest", Risk.Low.ordinal());
-		Assert.assertTrue(callFunctionResult.isSuccessful());
-		Object[] constFunctionResult = contract.callConstFunction("getTotalVoteCount");
-		Assert.assertEquals(BigInteger.ONE, constFunctionResult[0]);
-		// vote account1
-		blockChain.setSender(account1.getEcKey());
-		callFunctionResult = contract.callFunction(1, "invest", Risk.Low.ordinal());
-		Assert.assertTrue(callFunctionResult.isSuccessful());
-		constFunctionResult = contract.callConstFunction("getTotalVoteCount");
-		Assert.assertEquals(BigInteger.valueOf(2L), constFunctionResult[0]);
-	}
+		Object[] constFunctionResult2 = contract.callConstFunction("getInvestment", Risk.Low.ordinal());
+		Assert.assertEquals(BigInteger.ONE, constFunctionResult2[0]);
 
-	/**
-	 * Test getTotalVoteCount when all participants vote on the different risk.
-	 */
-	@Test
-	public void testgetTotalVoteCountOnDifferentVote() {
-		// vote account0
-		SolidityCallResult callFunctionResult = contract.callFunction(1, "invest", Risk.Low.ordinal());
-		Assert.assertTrue(callFunctionResult.isSuccessful());
-		Object[] constFunctionResult = contract.callConstFunction("getTotalVoteCount");
-		Assert.assertEquals(BigInteger.ONE, constFunctionResult[0]);
-		// vote account1
-		blockChain.setSender(account1.getEcKey());
-		callFunctionResult = contract.callFunction(1, "invest", Risk.Medium.ordinal());
-		Assert.assertTrue(callFunctionResult.isSuccessful());
-		constFunctionResult = contract.callConstFunction("getTotalVoteCount");
-		Assert.assertEquals(BigInteger.valueOf(2L), constFunctionResult[0]);
-		// vote account2
-		blockChain.setSender(account2.getEcKey());
-		callFunctionResult = contract.callFunction(1, "invest", Risk.High.ordinal());
-		Assert.assertTrue(callFunctionResult.isSuccessful());
-		constFunctionResult = contract.callConstFunction("getTotalVoteCount");
-		Assert.assertEquals(BigInteger.valueOf(3L), constFunctionResult[0]);
+		Object[] constFunctionResult3 = contract.callConstFunction("getInvestment", Risk.Medium.ordinal());
+		Assert.assertEquals(BigInteger.ZERO, constFunctionResult3[0]);
+
+		Object[] constFunctionResult4 = contract.callConstFunction("getInvestment", Risk.High.ordinal());
+		Assert.assertEquals(BigInteger.ZERO, constFunctionResult4[0]);
 	}
 
 	/**
@@ -107,6 +74,14 @@ public class FundContractTest extends AbstractEthereumJTest {
 	public void testGetParticipantBalanceWhenNotYetVoted() {
 		Object[] constFunctionResult = contract.callConstFunction("getParticipantBalance", account0.getAddress());
 		Assert.assertEquals(BigInteger.valueOf(0), constFunctionResult[0]);
+	}
+
+	@Test
+	public void testGetCombinedBalance() {
+		contract.callFunction(2, "invest", Risk.Medium.ordinal());
+		contract.callFunction(4, "invest", Risk.Medium.ordinal());
+		Object[] constFunctionResult = contract.callConstFunction("getCombinedBalance");
+		Assert.assertEquals(BigInteger.valueOf(6), constFunctionResult[0]);
 	}
 
 	/**

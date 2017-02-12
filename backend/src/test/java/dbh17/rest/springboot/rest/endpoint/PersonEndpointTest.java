@@ -2,11 +2,11 @@ package dbh17.rest.springboot.rest.endpoint;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,13 +15,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import dbh17.rest.domain.Person;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 public class PersonEndpointTest extends AbstractEndpointTest {
-
-	private Person testPerson;
 
 	@Override
 	@Before
@@ -31,49 +27,39 @@ public class PersonEndpointTest extends AbstractEndpointTest {
 
 	@Test
 	public void getPersonByCredential() throws Exception {
-		testPerson = createPerson();
-		String address = testPerson.getBlockchainAddress();
-		String credential = testPerson.getCredential();
+		String credential = "abcd";
 
-		MvcResult result = mockMvc.perform(get("/v1/person/{credential}", credential)).andExpect(status().isOk())
+		MvcResult result = mockMvc.perform(get("/v1/person/{credential}", "abcd")).andExpect(status().isOk())
 				.andExpect(content().contentType(JSON_MEDIA_TYPE)).andDo(MockMvcResultHandlers.print())
-				.andExpect(jsonPath("$.credential", is(credential)))
-				.andExpect(jsonPath("$.blockchainAddress", is(address))).andReturn();
-
-		logger.debug("content=" + result.getResponse().getContentAsString());
-	}
-
-	@Test
-	public void getPersonByCredentialNotFound() throws Exception {
-		MvcResult result = mockMvc.perform(get("/v1/person/{credential}", "none")).andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.credential", is("abcd")))
+				.andExpect(jsonPath("$.blockchainAddress", IsNull.notNullValue()))
+				.andExpect(jsonPath("$.password", IsNull.notNullValue()))
 				.andReturn();
 
 		logger.debug("content=" + result.getResponse().getContentAsString());
 	}
 
 	@Test
-	public void savePerson() throws Exception {
+	public void getPersonByCredentialNotFound() throws Exception {
+		MvcResult result = mockMvc.perform(get("/v1/person/{credential}", "none")).andExpect(status().isOk())
+				.andExpect(jsonPath("$.credential", is("none")))
+				.andExpect(jsonPath("$.blockchainAddress", IsNull.notNullValue()))
+				.andExpect(jsonPath("$.password", IsNull.notNullValue()))
+				.andReturn();
 
-		Person person = new Person();
-		person.setBlockchainAddress("0x9876");
-		person.setCredential("fb9876");
-		person.setPassword("myunsecuresecret");
-		String content = json(person);
-
-		mockMvc.perform(put("/v1/person").accept(JSON_MEDIA_TYPE).content(content).contentType(JSON_MEDIA_TYPE))
-				.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
-				.andExpect(jsonPath("$.credential", is(person.getCredential())))
-				.andExpect(jsonPath("$.password", is(person.getPassword())))
-				.andExpect(jsonPath("$.blockchainAddress", is(person.getBlockchainAddress()))).andReturn();
+		logger.debug("content=" + result.getResponse().getContentAsString());
 	}
 
-	private Person createPerson() {
-		// this is the initially the only person the service knows, because it
-		// is hardcode!
-		Person person = new Person();
-		person.setBlockchainAddress("0x1234");
-		person.setCredential("fb1234");
-		return person;
+	@Test
+	public void getAllPerson() throws Exception {
+		MvcResult result = mockMvc.perform(get("/v1/person/{credential}", "none")).andExpect(status().isOk())
+				.andReturn();
+		result = mockMvc.perform(get("/v1/person/{credential}", "abcd")).andExpect(status().isOk()).andReturn();
+
+		result = mockMvc.perform(get("/v1/person")).andExpect(status().isOk()).andReturn();
+
+		String contentAsString = result.getResponse().getContentAsString();
+		logger.debug("content=" + contentAsString);
 	}
 
 }

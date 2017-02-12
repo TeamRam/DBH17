@@ -1,5 +1,7 @@
 package dbh17.rest.springboot.rest.endpoint;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,13 @@ public class PersonEndpoint extends BaseEndpoint {
 
 		Person person = personService.findOne(credential);
 		return ResponseEntity.ok().body(person);
+	}
+
+	@RequestMapping(path = "/v1/person", method = RequestMethod.GET)
+	public ResponseEntity<List<Person>> getAll() {
+
+		List<Person> persons = personService.findAll();
+		return ResponseEntity.ok().body(persons);
 	}
 
 }

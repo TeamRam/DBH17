@@ -2,6 +2,8 @@ package dbh17.rest.domain;
 
 import java.io.Serializable;
 
+import com.google.common.base.Objects;
+
 public class Person implements Serializable {
 
 	private static final long serialVersionUID = -3847803994560965572L;
@@ -55,28 +57,7 @@ public class Person implements Serializable {
 			return false;
 		}
 		Person other = (Person) obj;
-		if (blockchainAddress == null) {
-			if (other.blockchainAddress != null) {
-				return false;
-			}
-		} else if (!blockchainAddress.equals(other.blockchainAddress)) {
-			return false;
-		}
-		if (credential == null) {
-			if (other.credential != null) {
-				return false;
-			}
-		} else if (!credential.equals(other.credential)) {
-			return false;
-		}
-		if (password == null) {
-			if (other.password != null) {
-				return false;
-			}
-		} else if (!password.equals(other.password)) {
-			return false;
-		}
-		return true;
+		return Objects.equal(this.credential, other.credential);
 	}
 
 }

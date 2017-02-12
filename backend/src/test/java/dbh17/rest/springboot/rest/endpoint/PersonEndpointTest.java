@@ -29,9 +29,9 @@ public class PersonEndpointTest extends AbstractEndpointTest {
 	public void getPersonByCredential() throws Exception {
 		String credential = "abcd";
 
-		MvcResult result = mockMvc.perform(get("/v1/person/{credential}", credential)).andExpect(status().isOk())
+		MvcResult result = mockMvc.perform(get("/v1/person/{credential}", "abcd")).andExpect(status().isOk())
 				.andExpect(content().contentType(JSON_MEDIA_TYPE)).andDo(MockMvcResultHandlers.print())
-				.andExpect(jsonPath("$.credential", is(credential)))
+				.andExpect(jsonPath("$.credential", is("abcd")))
 				.andExpect(jsonPath("$.blockchainAddress", IsNull.notNullValue()))
 				.andExpect(jsonPath("$.password", IsNull.notNullValue()))
 				.andReturn();
@@ -48,6 +48,18 @@ public class PersonEndpointTest extends AbstractEndpointTest {
 				.andReturn();
 
 		logger.debug("content=" + result.getResponse().getContentAsString());
+	}
+
+	@Test
+	public void getAllPerson() throws Exception {
+		MvcResult result = mockMvc.perform(get("/v1/person/{credential}", "none")).andExpect(status().isOk())
+				.andReturn();
+		result = mockMvc.perform(get("/v1/person/{credential}", "abcd")).andExpect(status().isOk()).andReturn();
+
+		result = mockMvc.perform(get("/v1/person")).andExpect(status().isOk()).andReturn();
+
+		String contentAsString = result.getResponse().getContentAsString();
+		logger.debug("content=" + contentAsString);
 	}
 
 }

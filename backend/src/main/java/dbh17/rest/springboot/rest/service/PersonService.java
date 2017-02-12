@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -54,6 +56,10 @@ public class PersonService {
 				| CipherException | IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public List<Person> findAll() {
+		return new ArrayList<>(personData.values());
 	}
 
 }
